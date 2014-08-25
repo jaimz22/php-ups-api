@@ -629,7 +629,7 @@ class Shipping extends Ups
 	 *
 	 * @return \DOMNode
 	 */
-    private function compileAddressNode(&$address)
+    private function compileAddressNode($address)
     {
         $xml = new DOMDocument;
         $xml->formatOutput = true;
