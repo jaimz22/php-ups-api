@@ -25,4 +25,70 @@ class ReferenceNumber
             }
         }
     }
+
+	/**
+	 * @return mixed
+	 */
+	public function getBarCodeIndicator()
+	{
+		return $this->BarCodeIndicator;
+	}
+
+	/**
+	 * @param mixed $BarCodeIndicator
+	 */
+	public function setBarCodeIndicator($BarCodeIndicator)
+	{
+		$this->BarCodeIndicator = $BarCodeIndicator;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getCode()
+	{
+		return $this->Code;
+	}
+
+	/**
+	 * @param mixed $Code
+	 */
+	public function setCode($Code)
+	{
+		$this->Code = $Code;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getNumber()
+	{
+		return $this->Number;
+	}
+
+	/**
+	 * @param mixed $Number
+	 */
+	public function setNumber($Number)
+	{
+		$this->Number = $Number;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getValue()
+	{
+		return $this->Value;
+	}
+
+	/**
+	 * @param mixed $Value
+	 */
+	public function setValue($Value)
+	{
+		$this->Value = $Value;
+	}
+
+
 } 

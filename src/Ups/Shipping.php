@@ -279,78 +279,78 @@ class Shipping extends Ups
                 $paymentNode->appendChild($xml->createElement('ConsigneeBilled'));
             }
 //        } else if ($shipment->ItemizedPaymentInformation) {
-            //$paymentNode = $shipmentNode->appendChild($xml->createElement('ItemizedPaymentInformation'));
+//            $paymentNode = $shipmentNode->appendChild($xml->createElement('ItemizedPaymentInformation'));
         }
 
-        if (isset($shipment->GoodsNotInFreeCirculationIndicator)) {
-            $shipmentNode->appendChild($xml->createElement('GoodsNotInFreeCirculationIndicator'));
-        }
-
-        if (isset($shipment->MovementReferenceNumber)) {
-            $shipmentNode->appendChild($xml->createElement('MovementReferenceNumber', $shipment->MovementReferenceNumber));
-        }
+//        if (isset($shipment->GoodsNotInFreeCirculationIndicator)) {
+//            $shipmentNode->appendChild($xml->createElement('GoodsNotInFreeCirculationIndicator'));
+//        }
+//
+//        if (isset($shipment->MovementReferenceNumber)) {
+//            $shipmentNode->appendChild($xml->createElement('MovementReferenceNumber', $shipment->MovementReferenceNumber));
+//        }
 
         $serviceNode = $shipmentNode->appendChild($xml->createElement('Service'));
-        $serviceNode->appendChild($xml->createElement('Code', $shipment->Service->Code));
+        $serviceNode->appendChild($xml->createElement('Code', $shipment->getService()->getCode()));
 
-        if (isset($shipment->Service->Description)) {
-            $serviceNode->appendChild($xml->createElement('Description', $shipment->Service->Description));
+        if (!is_null($shipment->getService()->getDescription())) {
+            $serviceNode->appendChild($xml->createElement('Description', $shipment->getService()->getDescription()));
         }
 
-        if (isset($shipment->InvoiceLineTotal)) {
-            $node = $shipmentNode->appendChild($xml->createElement('InvoiceLineTotal'));
+//        if (isset($shipment->InvoiceLineTotal)) {
+//            $node = $shipmentNode->appendChild($xml->createElement('InvoiceLineTotal'));
+//
+//            if ($shipment->InvoiceLineTotal->CurrencyCode) {
+//                $node->appendChild($xml->createElement('CurrencyCode', $shipment->InvoiceLineTotal->CurrencyCode));
+//            }
+//
+//            $node->appendChild($xml->createElement('MonetaryValue', $shipment->InvoiceLineTotal->MonetaryValue));
+//        }
+//
+//        if (isset($shipment->NumOfPiecesInShipment)) {
+//            $shipmentNode->appendChild($xml->createElement('NumOfPiecesInShipment', $shipment->NumOfPiecesInShipment));
+//        }
 
-            if ($shipment->InvoiceLineTotal->CurrencyCode) {
-                $node->appendChild($xml->createElement('CurrencyCode', $shipment->InvoiceLineTotal->CurrencyCode));
-            }
-
-            $node->appendChild($xml->createElement('MonetaryValue', $shipment->InvoiceLineTotal->MonetaryValue));
-        }
-
-        if (isset($shipment->NumOfPiecesInShipment)) {
-            $shipmentNode->appendChild($xml->createElement('NumOfPiecesInShipment', $shipment->NumOfPiecesInShipment));
-        }
-
-        foreach ($shipment->Package as &$package) {
+        foreach ($shipment->getPackages() as $package) {
             $node = $shipmentNode->appendChild($xml->createElement('Package'));
 
             $ptNode = $node->appendChild($xml->createElement('PackagingType'));
-            $ptNode->appendChild($xml->createElement('Code', $package->PackagingType->Code));
+            $ptNode->appendChild($xml->createElement('Code', $package->getPackagingType()->getCode()));
 
-            if (isset($package->PackagingType->Description)) {
-                $ptNode->appendChild($xml->createElement('Description', $package->PackagingType->Description));
+            if (!is_null($package->getPackagingType()->getDescription())) {
+                $ptNode->appendChild($xml->createElement('Description', $package->getPackagingType()->getDescription()));
             }
 
             $pwNode = $node->appendChild($xml->createElement('PackageWeight'));
             $umNode = $pwNode->appendChild($xml->createElement('UnitOfMeasurement'));
 
-            if (isset($package->PackageWeight->UnitOfMeasurement->Code)) {
-                $umNode->appendChild($xml->createElement('Code', $package->PackageWeight->UnitOfMeasurement->Code));
+            if (!is_null($package->getPackageWeight()->getUnitOfMeasurement()->getCode())) {
+                $umNode->appendChild($xml->createElement('Code', $package->getPackageWeight()->getUnitOfMeasurement()->getCode()));
             }
 
-            if (isset($package->PackageWeight->UnitOfMeasurement->Description)) {
-                $umNode->appendChild($xml->createElement('Description', $package->PackageWeight->UnitOfMeasurement->Description));
+            if (!is_null($package->getPackageWeight()->getUnitOfMeasurement()->getDescription())) {
+                $umNode->appendChild($xml->createElement('Description', $package->getPackageWeight()->getUnitOfMeasurement()->getDescription()));
             }
 
-            $pwNode->appendChild($xml->createElement('Weight', $package->PackageWeight->Weight));
+            $pwNode->appendChild($xml->createElement('Weight', $package->getPackageWeight()->getWeight()));
 
-            if (isset($package->LargePackageIndicator)) {
+            if (!is_null($package->getLargePackage())) {
                 $node->appendChild($xml->createElement('LargePackageIndicator'));
             }
 
-            if (isset($package->ReferenceNumber)) {
+            if (is_null($package->getReferenceNumber())) {
                 $refNode = $node->appendChild($xml->createElement('ReferenceNumber'));
 
-                if ($package->ReferenceNumber->BarCodeIndicator) {
-                    $refNode->appendChild($xml->createElement('BarCodeIndicator', $package->ReferenceNumber->BarCodeIndicator));
+                if (!is_null($package->getReferenceNumber()->getBarCodeIndicator())) {
+                    $refNode->appendChild($xml->createElement('BarCodeIndicator', $package->getReferenceNumber()->getBarCodeIndicator()));
                 }
 
-                $refNode->appendChild($xml->createElement('Code', $package->ReferenceNumber->Code));
-                $refNode->appendChild($xml->createElement('Value', $package->ReferenceNumber->Value));
+                $refNode->appendChild($xml->createElement('Code', $package->getReferenceNumber()->getCode()));
+                $refNode->appendChild($xml->createElement('Value', $package->getReferenceNumber()->getValue()));
             }
 
-            if (isset($package->AdditionalHandling)) {
-                $refNode->appendChild($xml->createElement('AdditionalHandling'));
+            if (!is_null($package->getAdditionalHandling())) {
+                $node->appendChild($xml->createElement('AdditionalHandling'));
             }
         }
 

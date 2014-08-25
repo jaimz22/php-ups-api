@@ -82,6 +82,8 @@ class Package implements NodeInterface
      */
     private $activities = array();
 
+	private $additionalHandling;
+
     /**
      * @param null|object $attributes
      */
@@ -342,4 +344,22 @@ class Package implements NodeInterface
         $this->upsPremiumCareIndicator = $upsPremiumCareIndicator;
         return $this;
     }
+
+	/**
+	 * @return mixed
+	 */
+	public function getAdditionalHandling()
+	{
+		return $this->additionalHandling;
+	}
+
+	/**
+	 * @param mixed $additionalHandling
+	 */
+	public function setAdditionalHandling($additionalHandling)
+	{
+		$this->additionalHandling = $additionalHandling;
+	}
+
+
 }
