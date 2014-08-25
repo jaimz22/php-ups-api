@@ -64,6 +64,10 @@ class Shipper implements NodeInterface
      */
     protected $address;
 
+	protected $companyName;
+
+	protected $companyDisplayableName;
+
     /**
      * @param null|object $attributes
      */
@@ -275,4 +279,38 @@ class Shipper implements NodeInterface
         $this->taxIdentificationNumber = $taxIdentificationNumber;
         return $this;
     }
+
+	/**
+	 * @return mixed
+	 */
+	public function getCompanyDisplayableName()
+	{
+		return $this->companyDisplayableName;
+	}
+
+	/**
+	 * @param mixed $companyDisplayableName
+	 */
+	public function setCompanyDisplayableName($companyDisplayableName)
+	{
+		$this->companyDisplayableName = $companyDisplayableName;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getCompanyName()
+	{
+		return $this->companyName;
+	}
+
+	/**
+	 * @param mixed $companyName
+	 */
+	public function setCompanyName($companyName)
+	{
+		$this->companyName = $companyName;
+	}
+
+
 }

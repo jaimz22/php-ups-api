@@ -6,6 +6,8 @@ use SimpleXMLElement;
 use Exception;
 use InvalidArgumentException;
 use stdClass;
+use Ups\Entity\Address;
+use Ups\Entity\Shipment;
 
 /**
  * Package Shipping API Wrapper
@@ -69,7 +71,7 @@ class Shipping extends Ups
      * Creates a ShipConfirm request
      *
      * @param string $validation
-     * @param stdClass $shipment
+     * @param Shipment $shipment
      * @param stdClass|null $labelSpecOpts
      * @param stdClass|null $receiptSpecOpts
      * @return string
@@ -94,8 +96,8 @@ class Shipping extends Ups
         // Page 47
         $shipmentNode = $container->appendChild($xml->createElement('Shipment'));
 
-        if (isset($shipment->Description)) {
-            $shipmentNode->appendChild($xml->createElement('Description', $shipment->Description));
+        if (!is_null($shipment->getDescription())) {
+            $shipmentNode->appendChild($xml->createElement('Description', $shipment->getDescription()));
         }
 
         if (isset($shipment->ReturnService)) {
@@ -110,87 +112,93 @@ class Shipping extends Ups
 
         $shipperNode = $shipmentNode->appendChild($xml->createElement('Shipper'));
 
-        $shipperNode->appendChild($xml->createElement('Name', $shipment->Shipper->Name));
+        $shipperNode->appendChild($xml->createElement('Name', $shipment->getShipper()->getName()));
 
-        if (isset($shipment->Shipper->AttentionName)) {
-            $shipperNode->appendChild($xml->createElement('AttentionName', $shipment->Shipper->AttentionName));
+        if (!is_null($shipment->getShipper()->getAttentionName())) {
+            $shipperNode->appendChild($xml->createElement('AttentionName', $shipment->getShipper()->getAttentionName()));
         }
 
-        if (isset($shipment->Shipper->CompanyDisplayableName)) {
-            $shipperNode->appendChild($xml->createElement('CompanyDisplayableName', $shipment->Shipper->CompanyDisplayableName));
+        if (!is_null($shipment->getShipper()->getCompanyDisplayableName())) {
+            $shipperNode->appendChild($xml->createElement('CompanyDisplayableName', $shipment->getShipper()->getCompanyDisplayableName()));
         }
 
-        $shipperNode->appendChild($xml->createElement('ShipperNumber', $shipment->Shipper->ShipperNumber));
+        $shipperNode->appendChild($xml->createElement('ShipperNumber', $shipment->getShipper()->getShipperNumber()));
 
-        if (isset($shipment->Shipper->TaxIdentificationNumber)) {
-            $shipperNode->appendChild($xml->createElement('TaxIdentificationNumber', $shipment->Shipper->TaxIdentificationNumber));
+        if (!is_null($shipment->getShipper()->getTaxIdentificationNumber())) {
+            $shipperNode->appendChild($xml->createElement('TaxIdentificationNumber', $shipment->getShipper()->getTaxIdentificationNumber()));
         }
 
-        if (isset($shipment->Shipper->PhoneNumber)) {
-            $shipperNode->appendChild($xml->createElement('PhoneNumber', $shipment->Shipper->PhoneNumber));
+        if (!is_null($shipment->getShipper()->getPhoneNumber())) {
+            $shipperNode->appendChild($xml->createElement('PhoneNumber', $shipment->getShipper()->getPhoneNumber()));
         }
 
-        if (isset($shipment->Shipper->FaxNumber)) {
-            $shipperNode->appendChild($xml->createElement('FaxNumber', $shipment->Shipper->FaxNumber));
+        if (!is_null($shipment->getShipper()->getFaxNumber())) {
+            $shipperNode->appendChild($xml->createElement('FaxNumber', $shipment->getShipper()->getFaxNumber()));
         }
 
-        if (isset($shipment->Shipper->EMailAddress)) {
-            $shipperNode->appendChild($xml->createElement('EMailAddress', $shipment->Shipper->EMailAddress));
+        if (!is_null($shipment->getShipper()->getEmailAddress())) {
+            $shipperNode->appendChild($xml->createElement('EMailAddress', $shipment->getShipper()->getEmailAddress()));
         }
 
-        $addressNode = $xml->importNode($this->compileAddressNode($shipment->Shipper->Address), true);
+        $addressNode = $xml->importNode($this->compileAddressNode($shipment->getShipper()->getAddress()), true);
         $shipperNode->appendChild($addressNode);
 
         $shipToNode = $shipmentNode->appendChild($xml->createElement('ShipTo'));
 
-        $shipToNode->appendChild($xml->createElement('CompanyName', $shipment->ShipTo->CompanyName));
+		if (!is_null($shipment->getShipTo()->getCompanyName())){
+			$shipToNode->appendChild($xml->createElement('CompanyName', $shipment->getShipTo()->getCompanyName()));
+		}
 
-        if (isset($shipment->ShipTo->AttentionName)) {
-            $shipToNode->appendChild($xml->createElement('AttentionName', $shipment->ShipTo->AttentionName));
+		if (!is_null($shipment->getShipTo()->getName())){
+			$shipToNode->appendChild($xml->createElement('Name', $shipment->getShipTo()->getName()));
+		}
+
+        if (!is_null($shipment->getShipTo()->getAttentionName())) {
+            $shipToNode->appendChild($xml->createElement('AttentionName', $shipment->getShipTo()->getAttentionName()));
         }
 
-        if (isset($shipment->ShipTo->PhoneNumber)) {
-            $shipToNode->appendChild($xml->createElement('PhoneNumber', $shipment->ShipTo->PhoneNumber));
+        if (!is_null($shipment->getShipTo()->getPhoneNumber())) {
+            $shipToNode->appendChild($xml->createElement('PhoneNumber', $shipment->getShipTo()->getPhoneNumber()));
         }
 
-        if (isset($shipment->ShipTo->FaxNumber)) {
-            $shipToNode->appendChild($xml->createElement('FaxNumber', $shipment->ShipTo->FaxNumber));
+        if (!is_null($shipment->getShipTo()->getFaxNumber())) {
+            $shipToNode->appendChild($xml->createElement('FaxNumber', $shipment->getShipTo()->getFaxNumber()));
         }
 
-        if (isset($shipment->ShipTo->EMailAddress)) {
-            $shipToNode->appendChild($xml->createElement('EMailAddress', $shipment->ShipTo->EMailAddress));
+        if (!is_null($shipment->getShipTo()->getEmailAddress())) {
+            $shipToNode->appendChild($xml->createElement('EMailAddress', $shipment->getShipTo()->getEmailAddress()));
         }
 
-        $addressNode = $xml->importNode($this->compileAddressNode($shipment->ShipTo->Address), true);
+        $addressNode = $xml->importNode($this->compileAddressNode($shipment->getShipTo()->getAddress()), true);
 
-        if (isset($shipment->ShipTo->ResidentialAddress)) {
+        if ($shipment->getShipTo()->isResidentialAddress()) {
             $addressNode->appendChild($xml->createElement('ResidentialAddress'));
         }
 
-        if (isset($shipment->ShipTo->LocationID)) {
-            $addressNode->appendChild($xml->createElement('LocationID', strtoupper($shipment->ShipTo->LocationID)));
+        if (!is_null($shipment->getShipTo()->getLocationId())) {
+            $addressNode->appendChild($xml->createElement('LocationID', strtoupper($shipment->getShipTo()->getLocationId())));
         }
 
         $shipToNode->appendChild($addressNode);
 
-        if (isset($shipment->ShipFrom)) {
+        if (!is_null($shipment->getShipFrom())) {
             $shipFromNode = $shipmentNode->appendChild($xml->createElement('ShipFrom'));
 
-            $shipFromNode->appendChild($xml->createElement('CompanyName', $shipment->ShipFrom->CompanyName));
+            $shipFromNode->appendChild($xml->createElement('CompanyName', $shipment->getShipFrom()->getCompanyName()));
 
-            if ($shipment->ShipFrom->AttentionName) {
-                $shipFromNode->appendChild($xml->createElement('AttentionName', $shipment->ShipFrom->AttentionName));
+            if (!is_null($shipment->getShipFrom()->getAttentionName())) {
+                $shipFromNode->appendChild($xml->createElement('AttentionName', $shipment->getShipFrom()->getAttentionName()));
             }
 
-            if ($shipment->ShipFrom->PhoneNumber) {
-                $shipFromNode->appendChild($xml->createElement('PhoneNumber', $shipment->ShipFrom->PhoneNumber));
+            if (!is_null($shipment->getShipFrom()->getPhoneNumber())) {
+                $shipFromNode->appendChild($xml->createElement('PhoneNumber', $shipment->getShipFrom()->getPhoneNumber()));
             }
 
-            if ($shipment->ShipFrom->FaxNumber) {
-                $shipFromNode->appendChild($xml->createElement('FaxNumber', $shipment->ShipFrom->FaxNumber));
+            if (!is_null($shipment->getShipFrom()->getFaxNumber())) {
+                $shipFromNode->appendChild($xml->createElement('FaxNumber', $shipment->getShipFrom()->getFaxNumber()));
             }
 
-            $addressNode = $xml->importNode($this->compileAddressNode($shipment->ShipFrom->Address), true);
+            $addressNode = $xml->importNode($this->compileAddressNode($shipment->getShipFrom()->getAddress()), true);
             $shipFromNode->appendChild($addressNode);
         }
 
@@ -614,12 +622,13 @@ class Shipping extends Ups
         return $this->convertXmlObject($response);
     }
 
-    /**
-     * Generates a standard <Address> node for requests
-     *
-     * @param stdClass $address Address data structure
-     * @return SimpleXMLElement
-     */
+	/**
+	 * Generates a standard <Address> node for requests
+	 *
+	 * @param Address $address Address data structure
+	 *
+	 * @return \DOMNode
+	 */
     private function compileAddressNode(&$address)
     {
         $xml = new DOMDocument;
@@ -627,28 +636,28 @@ class Shipping extends Ups
 
         $node = $xml->appendChild($xml->createElement('Address'));
 
-        $node->appendChild($xml->createElement('AddressLine1', $address->AddressLine1));
+        $node->appendChild($xml->createElement('AddressLine1', $address->getAddressLine1()));
 
-        if (isset($address->AddressLine2)) {
-            $node->appendChild($xml->createElement('AddressLine2', $address->AddressLine2));
+        if (!is_null($address->getAddressLine2())) {
+            $node->appendChild($xml->createElement('AddressLine2', $address->getAddressLine2()));
         }
 
-        if (isset($address->AddressLine3)) {
-            $node->appendChild($xml->createElement('AddressLine3', $address->AddressLine3));
+        if (!is_null($address->getAddressLine3())) {
+            $node->appendChild($xml->createElement('AddressLine3', $address->getAddressLine3()));
         }
 
-        $node->appendChild($xml->createElement('City', $address->City));
+        $node->appendChild($xml->createElement('City', $address->getCity()));
 
-        if (isset($address->StateProvinceCode)) {
-            $node->appendChild($xml->createElement('StateProvinceCode', $address->StateProvinceCode));
+        if (!is_null($address->getStateProvinceCode())) {
+            $node->appendChild($xml->createElement('StateProvinceCode', $address->getStateProvinceCode()));
         }
 
-        if (isset($address->PostalCode)) {
-            $node->appendChild($xml->createElement('PostalCode', $address->PostalCode));
+        if (!is_null($address->getPostalCode())) {
+            $node->appendChild($xml->createElement('PostalCode', $address->getPostalCode()));
         }
 
-        if (isset($address->CountryCode)) {
-            $node->appendChild($xml->createElement('CountryCode', $address->CountryCode));
+        if (!is_null($address->getCountryCode())) {
+            $node->appendChild($xml->createElement('CountryCode', $address->getCountryCode()));
         }
 
         return $node->cloneNode(true);

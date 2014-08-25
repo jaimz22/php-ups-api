@@ -30,6 +30,8 @@ class ShipTo implements NodeInterface
     /** @deprecated */
     public $Address;
 
+	private $name;
+
     /**
      * @var string
      */
@@ -84,6 +86,11 @@ class ShipTo implements NodeInterface
      * @var Address
      */
     private $address;
+
+	/**
+	 * @var bool
+	 */
+	private $residentialAddress = true;
 
     /**
      * @param null|object $attributes
@@ -359,4 +366,38 @@ class ShipTo implements NodeInterface
         $this->taxIdentificationNumber = $taxIdentificationNumber;
         return $this;
     }
+
+	/**
+	 * @return mixed
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
+
+	/**
+	 * @param mixed $name
+	 */
+	public function setName($name)
+	{
+		$this->name = $name;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isResidentialAddress()
+	{
+		return $this->residentialAddress;
+	}
+
+	/**
+	 * @param boolean $residentialAddress
+	 */
+	public function setResidentialAddress($residentialAddress)
+	{
+		$this->residentialAddress = $residentialAddress;
+	}
+
+
 }
