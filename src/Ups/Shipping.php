@@ -229,54 +229,55 @@ class Shipping extends Ups
             }
         }
 
-        if (isset($shipment->PaymentInformation)) {
+        if (!is_null($shipment->getPaymentInformation())) {
             $paymentNode = $shipmentNode->appendChild($xml->createElement('PaymentInformation'));
 
-            if ($shipment->PaymentInformation->Prepaid) {
+            if (!is_null($shipment->getPaymentInformation()->getPrepaid())) {
                 $node = $paymentNode->appendChild($xml->createElement('Prepaid'));
                 $node = $node->appendChild($xml->createElement('BillShipper'));
 
-                if ($shipment->PaymentInformation->Prepaid->BillShipper->AccountNumber) {
-                    $node->appendChild($xml->createElement('AccountNumber', $shipment->PaymentInformation->Prepaid->BillShipper->AccountNumber));
-                } else if ($shipment->PaymentInformation->Prepaid->BillShipper->CreditCard) {
-                    $ccNode = $node->appendChild($xml->createElement('CreditCard'));
-                    $ccNode->appendChild($xml->createElement('Type', $shipment->PaymentInformation->Prepaid->BillShipper->CreditCard->Type));
-                    $ccNode->appendChild($xml->createElement('Number', $shipment->PaymentInformation->Prepaid->BillShipper->CreditCard->Number));
-                    $ccNode->appendChild($xml->createElement('ExpirationDate', $shipment->PaymentInformation->Prepaid->BillShipper->CreditCard->ExpirationDate));
-
-                    if ($shipment->PaymentInformation->Prepaid->BillShipper->CreditCard->SecurityCode) {
-                        $ccNode->appendChild($xml->createElement('SecurityCode', $shipment->PaymentInformation->Prepaid->BillShipper->CreditCard->SecurityCode));
-                    }
-
-                    if ($shipment->PaymentInformation->Prepaid->BillShipper->CreditCard->Address) {
-                        $addressNode = $xml->importNode($this->compileAddressNode($shipment->PaymentInformation->Prepaid->BillShipper->CreditCard->Address), true);
-                        $ccNode->appendChild($addressNode);
-                    }
+                if (!is_null($shipment->getPaymentInformation()->getPrepaid()->getBillShipper()->getAccountNumber())) {
+                    $node->appendChild($xml->createElement('AccountNumber', $shipment->getPaymentInformation()->getPrepaid()->getBillShipper()->getAccountNumber()));
                 }
-            } else if ($shipment->PaymentInformation->BillThirdParty) {
-                $node = $paymentNode->appendChild($xml->createElement('BillThirdParty'));
-                $btpNode = $node->appendChild($xml->createElement('BillThirdPartyShipper'));
-                $btpNode->appendChild($xml->createElement('AccountNumber', $shipment->PaymentInformation->BillThirdParty->AccountNumber));
-
-                $tpNode = $btpNode->appendChild($xml->createElement('ThirdParty'));
-                $addressNode = $tpNode->appendChild($xml->createElement('Address'));
-
-                if ($shipment->PaymentInformation->BillThirdParty->ThirdParty->Address->PostalCode) {
-                    $addressNode->appendChild($xml->createElement('PostalCode', $shipment->PaymentInformation->BillThirdParty->ThirdParty->Address->PostalCode));
-                }
-
-                $addressNode->appendChild($xml->createElement('CountryCode', $shipment->PaymentInformation->BillThirdParty->ThirdParty->Address->CountryCode));
-            } else if ($shipment->PaymentInformation->FreightCollect) {
-                $node = $paymentNode->appendChild($xml->createElement('FreightCollect'));
-                $brNode = $node->appendChild($xml->createElement('BillReceiver'));
-                $brNode->appendChild($xml->createElement('AccountNumber', $shipment->PaymentInformation->FreightCollect->BillReceiver->AccountNumber));
-
-                if ($shipment->PaymentInformation->FreightCollect->BillReceiver->Address) {
-                    $addressNode = $brNode->appendChild($xml->createElement('Address'));
-                    $addressNode->appendChild($xml->createElement('PostalCode', $shipment->PaymentInformation->FreightCollect->BillReceiver->Address->PostalCode));
-                }
-            } else if ($shipment->PaymentInformation->ConsigneeBilled) {
-                $paymentNode->appendChild($xml->createElement('ConsigneeBilled'));
+//				else if ($shipment->PaymentInformation->Prepaid->BillShipper->CreditCard) {
+//                    $ccNode = $node->appendChild($xml->createElement('CreditCard'));
+//                    $ccNode->appendChild($xml->createElement('Type', $shipment->PaymentInformation->Prepaid->BillShipper->CreditCard->Type));
+//                    $ccNode->appendChild($xml->createElement('Number', $shipment->PaymentInformation->Prepaid->BillShipper->CreditCard->Number));
+//                    $ccNode->appendChild($xml->createElement('ExpirationDate', $shipment->PaymentInformation->Prepaid->BillShipper->CreditCard->ExpirationDate));
+//
+//                    if ($shipment->PaymentInformation->Prepaid->BillShipper->CreditCard->SecurityCode) {
+//                        $ccNode->appendChild($xml->createElement('SecurityCode', $shipment->PaymentInformation->Prepaid->BillShipper->CreditCard->SecurityCode));
+//                    }
+//
+//                    if ($shipment->PaymentInformation->Prepaid->BillShipper->CreditCard->Address) {
+//                        $addressNode = $xml->importNode($this->compileAddressNode($shipment->PaymentInformation->Prepaid->BillShipper->CreditCard->Address), true);
+//                        $ccNode->appendChild($addressNode);
+//                    }
+//                }
+//            } else if ($shipment->PaymentInformation->BillThirdParty) {
+//                $node = $paymentNode->appendChild($xml->createElement('BillThirdParty'));
+//                $btpNode = $node->appendChild($xml->createElement('BillThirdPartyShipper'));
+//                $btpNode->appendChild($xml->createElement('AccountNumber', $shipment->PaymentInformation->BillThirdParty->AccountNumber));
+//
+//                $tpNode = $btpNode->appendChild($xml->createElement('ThirdParty'));
+//                $addressNode = $tpNode->appendChild($xml->createElement('Address'));
+//
+//                if ($shipment->PaymentInformation->BillThirdParty->ThirdParty->Address->PostalCode) {
+//                    $addressNode->appendChild($xml->createElement('PostalCode', $shipment->PaymentInformation->BillThirdParty->ThirdParty->Address->PostalCode));
+//                }
+//
+//                $addressNode->appendChild($xml->createElement('CountryCode', $shipment->PaymentInformation->BillThirdParty->ThirdParty->Address->CountryCode));
+//            } else if ($shipment->PaymentInformation->FreightCollect) {
+//                $node = $paymentNode->appendChild($xml->createElement('FreightCollect'));
+//                $brNode = $node->appendChild($xml->createElement('BillReceiver'));
+//                $brNode->appendChild($xml->createElement('AccountNumber', $shipment->PaymentInformation->FreightCollect->BillReceiver->AccountNumber));
+//
+//                if ($shipment->PaymentInformation->FreightCollect->BillReceiver->Address) {
+//                    $addressNode = $brNode->appendChild($xml->createElement('Address'));
+//                    $addressNode->appendChild($xml->createElement('PostalCode', $shipment->PaymentInformation->FreightCollect->BillReceiver->Address->PostalCode));
+//                }
+//            } else if ($shipment->PaymentInformation->ConsigneeBilled) {
+//                $paymentNode->appendChild($xml->createElement('ConsigneeBilled'));
             }
 //        } else if ($shipment->ItemizedPaymentInformation) {
 //            $paymentNode = $shipmentNode->appendChild($xml->createElement('ItemizedPaymentInformation'));

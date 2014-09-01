@@ -53,6 +53,8 @@ class Shipment
      */
     private $shipmentServiceOptions;
 
+	private $paymentInformation;
+
     public function __construct()
     {
         $this->shipper = new Shipper();
@@ -206,4 +208,22 @@ class Shipment
         $this->shipper = $shipper;
         return $this;
     }
+
+	/**
+	 * @return PaymentInformation
+	 */
+	public function getPaymentInformation()
+	{
+		return $this->paymentInformation;
+	}
+
+	/**
+	 * @param mixed $paymentInformation
+	 */
+	public function setPaymentInformation($paymentInformation)
+	{
+		$this->paymentInformation = $paymentInformation;
+	}
+
+
 }
