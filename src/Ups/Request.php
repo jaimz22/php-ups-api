@@ -46,14 +46,33 @@ class Request implements RequestInterface
             )
         );
 
-        $request = stream_context_create($form);
+		$ch = curl_init();
+		$curlOptions = [
+			CURLOPT_URL => $endpointurl,
+			CURLOPT_HTTPHEADER => ['Content-type: application/x-www-form-urlencoded'],
+			CURLOPT_PORT => true,
+			CURLOPT_SSLVERSION => 3,
+			CURLOPT_SSL_CIPHER_LIST => 'SSLv3',
+			CURLOPT_POSTFIELDS => $this->getAccess().$this->getRequest(),
+			CURLOPT_RETURNTRANSFER => true
+		];
 
-        if (!$handle = fopen($this->getEndpointUrl(), 'rb', false, $request)) {
-            throw new Exception("Failure: Connection to Endpoint URL failed.");
-        }
+		curl_setopt_array($ch,$curlOptions);
 
-        $response = stream_get_contents($handle);
-        fclose($handle);
+		if(!$response = curl_exec($ch)){
+			trigger_error(curl_error($ch));
+			throw new Exception("Failure: Connection to Endpoint URL failed.");
+		}
+		curl_close($ch);
+
+//		$request = stream_context_create($form);
+
+//        if (!$handle = fopen($this->getEndpointUrl(), 'rb', false, $request)) {
+//            throw new Exception("Failure: Connection to Endpoint URL failed.");
+//        }
+
+//        $response = stream_get_contents($handle);
+//        fclose($handle);
 
         if ($response != false) {
             $text = $response;
